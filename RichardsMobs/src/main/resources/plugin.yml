@@ -1,0 +1,5 @@
+name: RichardsMobs
+main: io.github.richardyin.richardsmobs.RichardsMobs
+version: 0.0.1
+
+depend: [CustomMobs, LibsDisguises]
