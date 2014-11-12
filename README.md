@@ -3,4 +3,4 @@ richards-mobs
 
 A set of mobs for the CCSS server.
 
-Dependencies: ProtocolLib, LibsDisguises, CustomMobs, ControllableMobsAPI (not used yet)
+Dependencies: ProtocolLib, LibsDisguises, CustomMobs, ControllableMobsAPI
