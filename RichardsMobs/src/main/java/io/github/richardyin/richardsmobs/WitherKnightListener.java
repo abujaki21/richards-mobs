@@ -43,7 +43,12 @@ import emp.HellFire.Cmobs.api.CustomMobsAPI;
 import emp.HellFire.Cmobs.api.FileCustomMob;
 import emp.HellFire.Cmobs.api.edit.FileEditor;
 
-public class KnightListener implements Listener {
+public class WitherKnightListener implements Listener {
+
+	public WitherKnightListener() {
+		configureWitherKnight();
+		configureMeleeHorse();
+	}
 
 	@EventHandler
 	public void onCmobSpawn(CustomMobSpawnEvent event) {

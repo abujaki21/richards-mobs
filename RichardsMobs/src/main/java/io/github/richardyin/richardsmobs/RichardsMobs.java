@@ -9,10 +9,8 @@ public class RichardsMobs extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		plugin = this;
-		getServer().getPluginManager().registerEvents(new KnightListener(),
+		getServer().getPluginManager().registerEvents(new WitherKnightListener(),
 				this);
-		KnightListener.configureMeleeHorse();
-		KnightListener.configureWitherKnight();
 	}
 
 	@Override
