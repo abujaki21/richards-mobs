@@ -49,31 +49,10 @@ public class KnightListener implements Listener {
 	public void onCmobSpawn(CustomMobSpawnEvent event) {
 		// Wither Knight
 		if (event.getMobName().equals("WitherKnight")) {
-			Zombie knight = (Zombie) event.getSpawned();
-			try {
-				PlayerDisguise disguise = new PlayerDisguise("");
-				DisguiseAPI.disguiseEntity(knight, disguise);
-			} catch (NullPointerException npe) {
-				// no one cares
-			}
-			knight.setCustomName("Wither Knight");
-			knight.setCustomNameVisible(false);
-			try {
-				LivingEntity horse = CustomMobs.spawnCmob(event.getSpawned()
-						.getLocation(), "MeleeHorse", SpawnReason.COMMMAND);
-				horse.setPassenger(knight);
-				scheduleHorseAttackChecks(horse);
-			} catch (NoSuchElementException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return;
-			} catch (CountedError e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return;
-			}
-			// Wither Knight's horse
+			spawnWitherKnight(event);
+			return;
 		} else if (event.getMobName().equals("MeleeHorse")) {
+			// Wither Knight's horse
 			Horse horse = (Horse) event.getSpawned();
 			horse.setColor(Color.BLACK);
 			horse.getInventory().setArmor(new ItemStack(Material.IRON_BARDING));
@@ -94,6 +73,26 @@ public class KnightListener implements Listener {
 			// targets players from a long way off
 			AIBehavior<LivingEntity> target = new AITargetNearest(1, 80, false);
 			control.getAI().addBehavior(target);
+		}
+	}
+
+	private void spawnWitherKnight(CustomMobSpawnEvent event) {
+		Zombie knight = (Zombie) event.getSpawned();
+		PlayerDisguise disguise = new PlayerDisguise("");
+		DisguiseAPI.disguiseEntity(knight, disguise);
+		knight.setCustomName("Wither Knight");
+		knight.setCustomNameVisible(false);
+		try {
+			LivingEntity horse = CustomMobs.spawnCmob(event.getSpawned()
+					.getLocation(), "MeleeHorse", SpawnReason.COMMMAND);
+			horse.setPassenger(knight);
+			scheduleHorseAttackChecks(horse);
+		} catch (NoSuchElementException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CountedError e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
@@ -132,16 +131,16 @@ public class KnightListener implements Listener {
 		if (horse.getPassenger() == null) {
 			return;
 		}
-		BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
+		final BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
 		horseAttacks.put(horse, scheduler.scheduleSyncRepeatingTask(
 				RichardsMobs.plugin, new Runnable() {
 					@Override
 					public void run() {
 						// TODO Auto-generated method stub
-						// Bukkit.getServer()
-						// .getLogger()
-						// .info(horse.getNearbyEntities(1, 1, 1)
-						// .toString());
+						if (horse.getPassenger() == null) {
+							horse.damage(1000.0); // kill it
+							scheduler.cancelTask(horseAttacks.get(horse));
+						}
 						for (Entity e : horse.getNearbyEntities(1, 1, 1)) {
 							if (e instanceof HumanEntity) {
 								((HumanEntity) e).damage(20.0,
